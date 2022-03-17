@@ -1,0 +1,7 @@
+flask
+pyspellchecker
+readability
+numpy
+beautifulsoup4
+textblob
+requests
