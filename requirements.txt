@@ -1,0 +1,12 @@
+flask
+pyspellchecker
+readability
+numpy
+beautifulsoup4
+textblob
+requests
+pandas
+seaborn
+sklearn
+notebook
+mysql-connector
