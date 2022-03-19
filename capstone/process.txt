@@ -1,1 +1,36 @@
 frontend url: 127.0.0.1:5000/
+document_url_y=domain
+JJ=adj_count
+DT=deter_count
+page_rank
+bitly_clicks
+bitly_referrers
+tweets
+fb_likes
+alexa_linksin
+correction
+resp_HNC
+Controversial
+of_extract_features(url)
+
+	step1: collect the feature data
+
+			select max(seq_id) into :ll_max_seq_id from webtrust;
+
+			if isnull(ll_max_seq_id) or ll_max_seq_id = 0 then
+				ll_seq_id = 1
+			else
+				ll_seq_id = ll_max_seq_id + 1
+			end if
+
+	step2: insert in to db table
+			INSERT into webtrust values(:ll_seq_id,----------);
+
+			commit;
+
+	step3 : return seq_id of the newly inserted record
+
+
+	of_predict(url)
+		ll_seq_id = of_extract_features(url)
+		output_classification_results
