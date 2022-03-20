@@ -16,6 +16,7 @@ import time
 import warnings
 from urllib.parse import urljoin
 from urllib.parse import urlparse
+import pandas as pd
 
 def feature_extract(url,save_flag=True):
 
@@ -193,9 +194,7 @@ def feature_extract(url,save_flag=True):
             #                       'spelling_errors_count','text_complexity','smog',
             #                       'noun_count','verb_count','adj_count','deter_count']
             data = [
-            url, token,commas, exclamations, dots, questions,
-                polarity, positive_sentences, negative_sentences,
-                subjective_sentences, objective_sentences,
+                url, commas, exclamations, dots, questions,
                 spelling_errors, text_complexity, smog,
                 NN, VB, JJ, RB, DT, alexa_rank, document_url_y
             ]
@@ -205,12 +204,11 @@ def feature_extract(url,save_flag=True):
             # writer.writerow(header)
             writer.writerow(data)
 
-    feature_list = [
-        tokens, commas, exclamations, dots, questions,
-        polarity, positive_sentences, negative_sentences,
-        subjective_sentences, objective_sentences,
-        spelling_errors, text_complexity, smog,
-        NN, VB, JJ, RB, DT, alexa_rank, document_url_y
-    ]
+    feature_list = [{
+        'commas': commas, 'exclamations': exclamations, 'dots': dots, 'questions':questions,
+        'spelling_errors': spelling_errors, 'text_complexity': text_complexity, 'smog': smog,
+        'NN': NN, 'VB': VB, 'JJ': JJ, 'RB': RB, 'DT': DT, 'alexa_rank': alexa_rank, 'document_url_y': document_url_y
+    }]
 
+    feature_list=pd.DataFrame(feature_list)
     return feature_list
