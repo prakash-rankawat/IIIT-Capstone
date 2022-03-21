@@ -178,7 +178,7 @@ def feature_extract(url,save_flag=True):
     global_rank = alex_soup.select('p.big.data')  # select any p tag with big and data class
     global_rank = str(global_rank[0])
     res = re.findall(r"([0-9,]{1,12})", global_rank)  # find rank
-    alexa_rank = res[0]
+    alexa_rank = int(str(res[0]).replace(',',""))
 
     # To get domain name of a URL
     get_domain = urlparse(url).netloc

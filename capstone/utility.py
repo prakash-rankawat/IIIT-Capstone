@@ -13,3 +13,12 @@ def preprocess(X):
     sc = pickle.load(open("models/standardscaler.pkl","rb"))
     X= sc.transform(X)
     return X
+
+def preprocess_class(X):
+    X=X.fillna(0)
+    ## dummy encode the categorical variable.
+    le_x_docURL= pickle.load(open("models/le_x_docURL.pkl","rb"))
+    X.document_url_y = le_x_docURL.transform(X.document_url_y)
+    sc = pickle.load(open("models/sscaler_class.pkl","rb"))
+    X= sc.transform(X)
+    return X

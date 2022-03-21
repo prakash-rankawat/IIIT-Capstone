@@ -6,7 +6,7 @@ from flask import Flask, render_template, request
 import warnings
 from scraping import scraper
 import pickle
-from utility import preprocess
+from utility import preprocess,preprocess_class
 
 warnings.filterwarnings('ignore')
 # model = load("prediction_model.joblib")
@@ -26,14 +26,11 @@ def get_features(url):
     return scraper.feature_extract(url,True)
 
 def get_genre(features):
-    try:
-        with open("models/website_cat_model.pkl","rb") as file:
-            reg_model=pickle.load(file)
-        file.close()
-        score=reg_model.predict(features)
-    except:
-        genre = "Example"
-    return genre
+    with open("models/category_model.pkl","rb") as file:
+        class_model=pickle.load(file)
+    file.close()
+    category=class_model.predict(features)
+    return category
 
 
 def get_cred_score(features):
@@ -57,10 +54,13 @@ def predict():
         # scrape the data from URL
         # df = get_data()
         # predict genre
-        genre = get_genre(features)
-
+        features_reg=preprocess(features)
+        features_class=preprocess_class(features)
+        genre = get_genre(features_class)
+        le_y=pickle.load(open("models/le_y.pkl","rb"))
+        genre = le_y.inverse_transform(genre)[0]
         # predict credibility score
-        cred_score = get_cred_score(preprocess(features))
+        cred_score = get_cred_score(features_reg)
 
         return render_template('url.html', genre=genre, score=cred_score)
 

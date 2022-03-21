@@ -9,4 +9,5 @@ pandas
 seaborn
 sklearn
 notebook
-mysql-connector
+mysql-connector-python
+xgboost
