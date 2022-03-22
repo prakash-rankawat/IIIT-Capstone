@@ -4,15 +4,22 @@ from flask import Flask, render_template, request
 # from joblib import load
 # import sklearn
 import warnings
-from scraping import scraper
+from utils import scraper
 import pickle
-from utility import preprocess,preprocess_class
+from utils.utility import preprocess,preprocess_class
+from utils.dbutils import database
 
 warnings.filterwarnings('ignore')
 # model = load("prediction_model.joblib")
 # Initialize flask app
 app = Flask(__name__)
-
+host_name = "localhost"
+username = 'root'
+password = 'root'  # dba password
+db = "capstone"
+table = 'web_raw_data'
+auth_plugin = 'mysql_native_password'
+table="web_raw_data"
 
 # Home Page
 @app.route('/')
@@ -23,7 +30,8 @@ def main():
 # def get_data(url):
 #   pass
 def get_features(url):
-    return scraper.feature_extract(url,True)
+    seq_id=scraper.feature_extract(url,True)
+    return seq_id
 
 def get_genre(features):
     with open("models/category_model.pkl","rb") as file:
@@ -49,20 +57,27 @@ def predict():
         # get url
         url = request.form.get("urlCheck")
         print(url)
-        features=get_features(url)
-        print(features)
-        # scrape the data from URL
-        # df = get_data()
-        # predict genre
-        features_reg=preprocess(features)
-        features_class=preprocess_class(features)
-        genre = get_genre(features_class)
-        le_y=pickle.load(open("models/le_y.pkl","rb"))
-        genre = le_y.inverse_transform(genre)[0]
-        # predict credibility score
-        cred_score = get_cred_score(features_reg)
+        li_seq_id=get_features(url)
+        db_util = database(host_name, username, password, auth_plugin, db, table)
 
-        return render_template('url.html', genre=genre, score=cred_score)
+        if li_seq_id is not None and li_seq_id>0:
+            features_class=preprocess_class(li_seq_id)
+            print("length of preproccessed features Classification is ",len(features_class))
+            if len(features_class)>0:
+                ls_category = get_genre(features_class)
+                le_y=pickle.load(open("models/le_y.pkl","rb"))
+                ls_category = le_y.inverse_transform(ls_category)[0]
+                db_util.updateseqcolumn(li_seq_id, "category", ls_category)
+
+        # predict credibility score
+        if li_seq_id is not None and li_seq_id>0:
+            features_reg=preprocess(li_seq_id)
+            print("length of preproccessed features Regression is ",len(features_reg))
+            if len(features_reg)>0:
+                ld_cred_score = get_cred_score(features_reg)
+                db_util.updateseqcolumn(li_seq_id,"credibility_rating", ld_cred_score)
+
+        return render_template('url.html', genre=ls_category, score=ld_cred_score)
 
 
 # main method

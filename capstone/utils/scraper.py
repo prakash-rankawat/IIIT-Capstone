@@ -9,7 +9,7 @@ from collections import Counter
 from nltk.tokenize import TweetTokenizer
 import numpy as np
 import readability
-import csv
+#import csv
 import requests as r
 from datetime import datetime
 import time
@@ -17,6 +17,15 @@ import warnings
 from urllib.parse import urljoin
 from urllib.parse import urlparse
 import pandas as pd
+from utils.dbutils import database
+
+host_name = "localhost"
+username = 'root'
+password = 'root'  # dba password
+db = "capstone"
+table = 'web_raw_data'
+auth_plugin = 'mysql_native_password'
+table="web_raw_data"
 
 def feature_extract(url,save_flag=True):
 
@@ -184,25 +193,25 @@ def feature_extract(url,save_flag=True):
     get_domain = urlparse(url).netloc
     document_url_y = '.'.join(get_domain.split('.')[-1:])
 
-    if (save_flag == True):
+    # if (save_flag == True):
         # open the file in the write mode
-        with open('url_features.csv', 'a', newline='') as csvfile:
+        # with open('url_features.csv', 'a', newline='') as csvfile:
             # csv header
             #            header = ['token_count','commas_count','exclamations_count','dots_count','questions_count',
             #                       'polarity','positive_sentences_count','negative_sentences_count',
             #                       'subjective_sentences_count','objective_sentences_count',
             #                       'spelling_errors_count','text_complexity','smog',
             #                       'noun_count','verb_count','adj_count','deter_count']
-            data = [
-                url, commas, exclamations, dots, questions,
-                spelling_errors, text_complexity, smog,
-                NN, VB, JJ, RB, DT, alexa_rank, document_url_y
-            ]
+            # data = [
+            #     url, commas, exclamations, dots, questions,
+            #     spelling_errors, text_complexity, smog,
+                # NN, VB, JJ, RB, DT, alexa_rank, document_url_y
+            # ]
             # create the csv writer
-            writer = csv.writer(csvfile)
+            # writer = csv.writer(csvfile)
             # write header & a row to the csv file
             # writer.writerow(header)
-            writer.writerow(data)
+            # writer.writerow(data)
 
     feature_list = [{
         'commas': commas, 'exclamations': exclamations, 'dots': dots, 'questions':questions,
@@ -211,4 +220,8 @@ def feature_extract(url,save_flag=True):
     }]
 
     feature_list=pd.DataFrame(feature_list)
-    return feature_list
+    feature_list['url']=url
+    db_util = database(host_name, username, password, auth_plugin, db, table)
+    db_util.delete_url(url)
+    seq_id=db_util.insert_row(feature_list)
+    return seq_id
