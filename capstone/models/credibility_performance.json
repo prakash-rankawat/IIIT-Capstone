@@ -1,0 +1,6 @@
+{
+  "regTrainAccuScore": 0.65,
+  "regTestAccuScore": 0.5,
+  "regTrainR2Score": 0.3,
+  "regTestR2Score": 0.25
+}

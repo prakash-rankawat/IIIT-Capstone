@@ -1,0 +1,6 @@
+{
+  "classTrainAccuScore": 0.4,
+  "classTestAccuScore": 0.3,
+  "classTrainF1Score": 0.5,
+  "classTestF1Score": 0.4
+}
