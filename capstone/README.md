@@ -1,5 +1,5 @@
 # IIIT-Capstone
-###Initial setup
+### Initial setup
 install dependencies: 
 1. `pip install -r requirements.txt`,
 2. `python install_nltk_dependencies.py`,
