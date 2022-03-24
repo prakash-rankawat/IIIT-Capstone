@@ -55,6 +55,6 @@ def predict(url):
     return ls_category, ld_cred_score
 
 def GetRegModelPerformance():
-    reg_performance = json.load(open("models/credibility_performance.json", "r"))
+    reg_performance = json.load(open("models/regression_performance.json", "r"))
     class_performance=json.load(open("models/classification_performance.json","r"))
     return reg_performance,class_performance

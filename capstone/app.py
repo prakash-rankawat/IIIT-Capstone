@@ -5,6 +5,8 @@ from RunModel import *
 # import pandas as pd
 # from joblib import load
 # import sklearn
+from training import credibiltiy_training, category_training
+
 import warnings
 
 warnings.filterwarnings('ignore')
@@ -14,20 +16,32 @@ warnings.filterwarnings('ignore')
 app = Flask(__name__)
 CORS(app)
 
+
 # Home Page
 @app.route('/')
 def test():
     return 'this is test api'
 
+
+@app.route('/retrain_credibility_model')
+def retrain_cred():
+    return jsonify(credibiltiy_training.regression_retrain())
+
+
+@app.route('/retrain_category_model')
+def retrain_category():
+    return jsonify(category_training.classification_retrain())
+
+
 def get_features(url):
-    genre, credibility_score=predict(url)
-    reg_performance,class_performance=GetRegModelPerformance()
-    print(reg_performance,class_performance)
+    genre, credibility_score = predict(url)
+    reg_performance, class_performance = GetRegModelPerformance()
+    print(reg_performance, class_performance)
     features = json.dumps({"URL": url, "Score": credibility_score, "Genre": genre,
-                           "regTrainAccuScore": reg_performance["regTrainAccuScore"], "regTrainR2Score": reg_performance["regTrainR2Score"],
-                           "regTestAccuScore": reg_performance["regTestAccuScore"], "regTestR2Score": reg_performance["regTestR2Score"],
-                           "classTrainAccuScore": class_performance["classTrainAccuScore"], "classTrainF1Score": class_performance["classTrainF1Score"],
-                           "classTestAccuScore": class_performance["classTestAccuScore"], "classTestF1Score": class_performance["classTestF1Score"]})
+                           "regAccuracy": reg_performance["accuracy_score"],
+                           "regR2Score": reg_performance["test_r2_score"],
+                           "classAccuracy": class_performance['Accuracy'], "classF1Score": class_performance["F1-Score"]
+                           })
     return features
 
 
@@ -38,4 +52,3 @@ def get_prediction():
         return "URL is not supplied"
     else:
         return get_features(request.args.get('url', None))
-0

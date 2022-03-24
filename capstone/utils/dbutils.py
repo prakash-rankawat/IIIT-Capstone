@@ -66,7 +66,9 @@ class database:
         conn.close()
 
     def query_cols(self, seq_id, col_list):
-        sql = "select {0} from {1}.{2} where serial_number={3}".format(", ".join(col_list), self.db, self.table, seq_id)
+        sql = "select {0} from {1}.{2}".format(", ".join(col_list), self.db, self.table)
+        if not seq_id is None:
+            sql = "select {0} from {1}.{2} where serial_number={3}".format(", ".join(col_list), self.db, self.table, seq_id)
         conn = self.connect_to_db()
         cursor = conn.cursor()
         cursor.execute(sql)

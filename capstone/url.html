@@ -69,7 +69,9 @@ table, th, td {
     <div class="container">
               <div class="row">
                 <div class="col-4"> <label for="urlCheck" class="form-label"> Enter URL:- </label></div>
-                 <div class="col-6"> <input type="url" class="form-control" name = "urlCheck" id="urlCheck" required></div>
+                 <div class="col-6"> <input type="url" class="form-control" name = "urlCheck" id="urlCheck" placeholder="https://example.com" pattern="https?://.+" required title="Only well-formed URLs are allowed">
+                 <span class="validity"></span>
+                 </div>
                 </div><br>
               </div>
     <div class="col-auto">
@@ -79,31 +81,31 @@ table, th, td {
     <div class="container">
               <div class="row">
                 <div class="col-4"> <label for="Genre" class="form-label" > Predicted Genre:-</label></div>
-                <div class="col-6" id="divGenre"></div>
+                <div class="col-6" id="divGenre" style= "font-weight bold"></div>
                 </div>
-              
+
               <div class="container">
               <div class="row">
                 <div class="col-4"> <label for="Credibility Score" class="form-label"> Predicted Credibility Score :-</label></div>
                 <div class="col-6" id="divCredScore"></div>
-				</div>             
-            
+				</div>
+
               </div>
-			  
+
 			  <div>
 
 <table style="width:20%" align="left">
   <tr><th>Regression Model Credibility Score</th>
-  
+
   </tr>
-  </table>  
-			  
+  </table>
+
         <table style="width:30%" align="left">
     <tr>
     <th>-</th>
     <th >Train</th>
     <th>Test</th>
-    
+
   </tr>
   <tr>
     <td>Acuuracy</td>
@@ -119,16 +121,16 @@ table, th, td {
 
 <table style="width:20%" align="left">
   <tr><th>Classification Model for Predicting Genre</th>
-  
+
   </tr>
-  </table>  
-			  
+  </table>
+
         <table style="width:30%" align="left">
     <tr>
     <th>-</th>
     <th >Train</th>
     <th>Test</th>
-    
+
   </tr>
   <tr>
     <td>Acuuracy</td>
@@ -142,24 +144,24 @@ table, th, td {
   </tr>
 </table>
 
-</div>  
+</div>
 
 		  <div>
 <table style="width:50%" align="left">
 <tr><th>
-                <img id="regfeatImg" alt="Top 10 Features" style="width:600px;height:500px;">
+                <img id="regfeatImg" alt="Top Features" style="width:600px;height:500px;">
 </th>
   </tr>
-  </table>		
+  </table>
 
 <table style="width:50%" align="right">
 <tr><th>
-                <img id="clasfeatImg" alt="Top 10 Features" style="width:600px;height:500px;">
+                <img id="clasfeatImg" alt="Top Features" style="width:600px;height:500px;">
 </th>
   </tr>
-  </table>		
-</div>  
-     
+  </table>
+</div>
+
 
 </div>
 </div>
@@ -168,16 +170,49 @@ table, th, td {
 </div>
 </page>
     <script type = "text/javascript">
-	function sleep(milliseconds) {  
-      return new Promise(resolve => setTimeout(resolve, milliseconds));  
-   }  
-   
-   
+	function sleep(milliseconds) {
+      return new Promise(resolve => setTimeout(resolve, milliseconds));
+   }
+
+   function isUrlValid(userInput) {
+    var res = userInput.match(/(http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/g);
+    if(res == null)
+        return false;
+    else
+        return true;
+}
+
       async function GetGonre() {
+	  if(document.getElementById("urlCheck").value == "")
+	  {
+			alert('Please enter URL');
+			return;
+	  }
+	  if(!isUrlValid(document.getElementById("urlCheck").value))
+	  {
+	       alert('Please enter a Valid URL');
+	       return;
+	  }
+	  document.getElementById('divGenre').innerHTML = "";
+        document.getElementById('divCredScore').innerHTML = "";
+		document.getElementById('trainRegAccu').innerHTML = "";
+		document.getElementById('trainRegR2').innerHTML = "";
+		document.getElementById('testRegAccu').innerHTML = "";
+		document.getElementById('testRegR2').innerHTML = "";
+		document.getElementById('trainClasAccu').innerHTML = "";
+		document.getElementById('trainClasF1').innerHTML = "";
+		document.getElementById('testClasAccu').innerHTML = "";
+		document.getElementById('testClasF1').innerHTML = "";
+        //document.getElementById('divFeatures').innerHTML = data.feature1;
+        //document.getElementById('divTrainScore').innerHTML = data.trainscore;
+        //document.getElementById('divTestScore').innerHTML = data.testscore;
+		document.getElementById('regfeatImg').src = "";
+		document.getElementById('clasfeatImg').src = "";
+
 	  //document.getElementById('spinGet').class = "loader";
 	  document.getElementById("spinGet").style.display = "block";
-	  await sleep(5000);
-	  
+	  //await sleep(10000);
+
        $.ajax({
     type:"POST",
     contentType: 'application/json; charset=utf-8',
@@ -187,12 +222,12 @@ table, th, td {
     success: function(data){
         document.getElementById('divGenre').innerHTML = data.Genre;
         document.getElementById('divCredScore').innerHTML = data.Score;
-		document.getElementById('trainRegAccu').innerHTML = data.regTrainAccuScore;
-		document.getElementById('trainRegR2').innerHTML = data.regTrainR2Score
+		document.getElementById('trainRegAccu').innerHTML = data.regAccuracy;
+		document.getElementById('trainRegR2').innerHTML = data.regR2Score;
 		document.getElementById('testRegAccu').innerHTML = data.regTestAccuScore;
 		document.getElementById('testRegR2').innerHTML = data.regTestR2Score;
-		document.getElementById('trainClasAccu').innerHTML = data.classTrainAccuScore;
-		document.getElementById('trainClasF1').innerHTML = data.classTrainF1Score;
+		document.getElementById('trainClasAccu').innerHTML = data.classAccuracy;
+		document.getElementById('trainClasF1').innerHTML = data.classF1Score;
 		document.getElementById('testClasAccu').innerHTML = data.classTestAccuScore;
 		document.getElementById('testClasF1').innerHTML = data.classTestF1Score;
         //document.getElementById('divFeatures').innerHTML = data.feature1;
@@ -200,7 +235,10 @@ table, th, td {
         //document.getElementById('divTestScore').innerHTML = data.testscore;
 		document.getElementById('regfeatImg').src = "./models/top5features.png";
 		document.getElementById('clasfeatImg').src = "./models/top5featuresClass.png";
-    }	
+    },
+        error: function (textStatus, errorThrown) {
+            alert('Error Processing data');
+        }
 })
 document.getElementById("spinGet").style.display = "none";
       }
