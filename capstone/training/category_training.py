@@ -8,6 +8,8 @@ from sklearn.model_selection import train_test_split
 from sklearn.metrics import f1_score, accuracy_score
 import pandas as pd
 import pymysql
+import matplotlib.pyplot as plt
+import seaborn as sns
 
 connection = pymysql.connect(
     host="localhost",
@@ -41,7 +43,8 @@ def classification_retrain():
     df2 = df_main.loc[df_main['document_url_y'].isin(array)]
 
     # filling all null category as 'unknown'
-    df2["category"].fillna("Unknown", inplace=True)
+    print(df2.category.mode()[0])
+    df2["category"].fillna(df2.category.mode()[0], inplace=True)
 
     # Dropping the missing values.
     df2 = df2.fillna(0)
@@ -101,19 +104,27 @@ def classification_retrain():
     f1 = f1_score(y_test, y_test_pred, average='weighted')
     perform_metrics = {"Accuracy": accuracy, "F1-score": f1}
 
+    FI_df = pd.DataFrame({'Features': X_data.columns, 'Importance': rf_model.feature_importances_})
+    FI_df = FI_df.sort_values(by='Importance', ascending=False).head(100)
+
     # compare old and new accuracy and then pickle the new model to use by the application,
     # if retrained model gives better performance
     if accuracy > previous_accuracy:
-        with open("../models/le_x_docURL.pkl", 'wb') as file:
+        # plot feature importance
+        plt.figure(figsize=(15, 10), dpi=100)
+        sns.barplot(x=FI_df[:10].Importance, y=FI_df[:10].Features, orient='h').set_title('Feature Importance')
+        plt.savefig("./static/top10featuresclass.png")
+
+        with open("./models/le_x_docURL.pkl", 'wb') as file:
             pickle.dump(le_x_docURL, file)
         file.close()
-        with open("../models/le_y.pkl", 'wb') as file:
+        with open("./models/le_y.pkl", 'wb') as file:
             pickle.dump(le_y, file)
         file.close()
-        with open("../models/sscaler_class.pkl", 'wb') as file:
+        with open("./models/sscaler_class.pkl", 'wb') as file:
             pickle.dump(sc, file)
         file.close()
-        with open("../models/category_model.pkl", 'wb') as file:
+        with open("./models/category_model.pkl", 'wb') as file:
             pickle.dump(rf_model, file)
         file.close()
         # storing the data in JSON format

@@ -21,6 +21,7 @@ def get_genre(features):
         class_model=pickle.load(file)
     file.close()
     category=class_model.predict(features)
+    print(category)
     return category
 
 def get_cred_score(features):

@@ -6,7 +6,7 @@ from RunModel import *
 # from joblib import load
 # import sklearn
 from training import credibiltiy_training, category_training
-
+from flask import render_template
 import warnings
 
 warnings.filterwarnings('ignore')
@@ -19,8 +19,8 @@ CORS(app)
 
 # Home Page
 @app.route('/')
-def test():
-    return 'this is test api'
+def home():
+    return render_template("url.html")
 
 
 @app.route('/retrain_credibility_model')
@@ -31,7 +31,6 @@ def retrain_cred():
 @app.route('/retrain_category_model')
 def retrain_category():
     return jsonify(category_training.classification_retrain())
-
 
 def get_features(url):
     genre, credibility_score = predict(url)
@@ -52,3 +51,6 @@ def get_prediction():
         return "URL is not supplied"
     else:
         return get_features(request.args.get('url', None))
+
+if __name__=="__main__":
+    app.run(debug=True)

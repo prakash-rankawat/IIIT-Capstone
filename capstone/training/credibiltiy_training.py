@@ -8,6 +8,8 @@ import os
 import pickle
 import pymysql
 import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
 
 connection = pymysql.connect(
     host="localhost",
@@ -92,16 +94,22 @@ def regression_retrain():
     ac_score = 1 - mean_absolute_error(y_test, y_test_pred)
     perform_metrics = {'test_r2_score': test_r2_score}
 
+    FI_df = pd.DataFrame({'Features': X.columns, 'Importance': rf_model.feature_importances_})
+    FI_df = FI_df.sort_values(by='Importance', ascending=False).head(100)
     # compare old and new accuracy and then pickle the new model to use by the application,
     # if retrained model gives better performance
     if test_r2_score > previous_r2_score:
-        with open("../models/le.pkl", 'wb') as file:
+        plt.figure(figsize=(15, 10), dpi=100)
+        sns.barplot(x=FI_df[:10].Importance, y=FI_df[:10].Features, orient='h').set_title('Feature Importance')
+        plt.savefig("./static/top10features.png")
+
+        with open("./models/le.pkl", 'wb') as file:
             pickle.dump(le, file)
         file.close()
-        with open("../models/standardscaler.pkl", 'wb') as file:
+        with open("./models/standardscaler.pkl", 'wb') as file:
             pickle.dump(sc, file)
         file.close()
-        with open("../models/category_model.pkl", 'wb') as file:
+        with open("./models/rf_credibility_model.pkl", 'wb') as file:
             pickle.dump(rf_model, file)
         file.close()
         # storing the data in JSON format
