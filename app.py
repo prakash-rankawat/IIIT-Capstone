@@ -32,14 +32,16 @@ def retrain_cred():
 def retrain_category():
     return jsonify(category_training.classification_retrain())
 
+
 def get_features(url):
     genre, credibility_score = predict(url)
     reg_performance, class_performance = GetRegModelPerformance()
     print(reg_performance, class_performance)
     features = json.dumps({"URL": url, "Score": credibility_score, "Genre": genre,
-                           "regAccuracy": reg_performance["accuracy_score"],
-                           "regR2Score": reg_performance["test_r2_score"],
-                           "classAccuracy": class_performance['Accuracy'], "classF1Score": class_performance["F1-Score"]
+                           "regAccuracy": '{:.2f}%'.format(100 * reg_performance["accuracy_score"]),
+                           "regR2Score": '{:.2f}%'.format(100 * reg_performance["test_r2_score"]),
+                           "classAccuracy": '{:.2f}%'.format(100 * class_performance['Accuracy']),
+                           "classF1Score": '{:.2f}%'.format(100 * class_performance["F1-Score"])
                            })
     return features
 
@@ -52,5 +54,6 @@ def get_prediction():
     else:
         return get_features(request.args.get('url', None))
 
-if __name__=="__main__":
+
+if __name__ == "__main__":
     app.run(debug=True)
