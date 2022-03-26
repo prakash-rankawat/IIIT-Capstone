@@ -12,3 +12,4 @@ sklearn
 notebook
 mysql-connector-python
 xgboost
+pymysql

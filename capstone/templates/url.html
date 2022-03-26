@@ -107,7 +107,7 @@ table, th, td {
 
   </tr>
   <tr>
-    <td>Acuuracy</td>
+    <td>Accuracy</td>
 	<td id="testRegAccu"></td>
     </tr>
   <tr>
@@ -129,7 +129,7 @@ table, th, td {
 
   </tr>
   <tr>
-    <td>Acuuracy</td>
+    <td>Accuracy</td>
 	<td id="testClasAccu"></td>
     </tr>
   <tr>
@@ -193,15 +193,12 @@ table, th, td {
 		document.getElementById('testRegR2').innerHTML = "";
 		document.getElementById('testClasAccu').innerHTML = "";
 		document.getElementById('testClasF1').innerHTML = "";
-        //document.getElementById('divFeatures').innerHTML = data.feature1;
-        //document.getElementById('divTrainScore').innerHTML = data.trainscore;
-        //document.getElementById('divTestScore').innerHTML = data.testscore;
 		document.getElementById('regfeatImg').src = "";
 		document.getElementById('clasfeatImg').src = "";
 
 	  //document.getElementById('spinGet').class = "loader";
 	  document.getElementById("spinGet").style.display = "block";
-	  //await sleep(10000);
+	  //await sleep(100000);
 
        $.ajax({
     type:"POST",
@@ -221,12 +218,13 @@ table, th, td {
         //document.getElementById('divTestScore').innerHTML = data.testscore;
 		document.getElementById('regfeatImg').src = "../static/top10features.png";
 		document.getElementById('clasfeatImg').src = "../static/top10featuresclass.png";
+        document.getElementById("spinGet").style.display = "none";
     },
         error: function (textStatus, errorThrown) {
             alert('Error Processing data');
         }
 })
-document.getElementById("spinGet").style.display = "none";
+//document.getElementById("spinGet").style.display = "none";
       }
 </script>
     <!-- Optional JavaScript; choose one of the two! -->
