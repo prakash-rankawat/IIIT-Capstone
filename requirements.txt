@@ -11,4 +11,4 @@ seaborn
 sklearn
 notebook
 mysql-connector-python
-xgboost
+nltk

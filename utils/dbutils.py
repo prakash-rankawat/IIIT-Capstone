@@ -78,7 +78,7 @@ class database:
         return pd.DataFrame(result, columns=col_list)
 
     def create_and_setup_db(self):
-        create_table_command2 = ("""CREATE TABLE IF NOT EXISTS WEB_RAW_DATA (
+        create_table_command2 = ("""CREATE TABLE IF NOT EXISTS web_raw_data (
                                 Serial_number bigint NOT NULL AUTO_INCREMENT PRIMARY KEY,
                                 document_id bigint,
                                 URL varchar(255),
@@ -131,8 +131,8 @@ class database:
                                 troia_label decimal(30,15)
                                 )""")
 
-        create_db = ("CREATE DATABASE IF NOT EXISTS CAPSTONE")
-        use_db = ("USE CAPSTONE")
+        create_db = ("CREATE DATABASE IF NOT EXISTS capstone")
+        use_db = ("USE capstone")
         conn = self.connect_to_db()
         if conn is not None:
             self.execute_query(conn, create_db)
@@ -150,7 +150,7 @@ class database:
         df_raw = pd.read_csv(filepath, index_col=0)
 
         cur = conn.cursor()
-        sql_query = "SELECT ifnull(MAX(Serial_number),0) AS MAX_ID FROM CAPSTONE.WEB_RAW_DATA"
+        sql_query = "SELECT ifnull(MAX(Serial_number),0) AS MAX_ID FROM capstone.web_raw_data"
         cur.execute(sql_query)
         rows = cur.fetchall()
         li_max = rows[0][0]
@@ -393,7 +393,7 @@ class database:
             else:
                 ld_troia_label = float64(df_raw.loc[row, "troia_label"])
 
-            sql_query = """INSERT INTO CAPSTONE.WEB_RAW_DATA (Serial_number,document_id,URL,Credibility_rating, ad_count,ad_max_size,css_definitions,page_rank,bitly_clicks,bitly_referrers,tweets,delicious_bookmarks,fb_clicks,fb_comments,fb_likes,fb_shares,fb_total,alexa_linksin,alexa_rank,commas,dots,exclamations,questions,spelling_errors,text_complexity,smog,category,JJ,NN,DT,VB,RB,num_ne,sum_ne,document_url_y,X1,X2,X3,X4,X5,X9,Total,Leik,Eijk,Tastle,Leik_3_4_6,correction,resp_HNC,Controversial,troia_label) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"""
+            sql_query = """INSERT INTO capstone.web_raw_data (Serial_number,document_id,URL,Credibility_rating, ad_count,ad_max_size,css_definitions,page_rank,bitly_clicks,bitly_referrers,tweets,delicious_bookmarks,fb_clicks,fb_comments,fb_likes,fb_shares,fb_total,alexa_linksin,alexa_rank,commas,dots,exclamations,questions,spelling_errors,text_complexity,smog,category,JJ,NN,DT,VB,RB,num_ne,sum_ne,document_url_y,X1,X2,X3,X4,X5,X9,Total,Leik,Eijk,Tastle,Leik_3_4_6,correction,resp_HNC,Controversial,troia_label) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"""
             cur.execute(sql_query, (
             li_serial_num, li_doc_id, ls_url, ld_credibility_rating, ld_ad_count, ld_ad_max_size, ld_css_definitions,
             ld_page_rank, ld_bitly_clicks, ld_bitly_referrers, ld_tweets, ld_delicious_bookmarks, ld_fb_clicks,

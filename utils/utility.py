@@ -3,9 +3,9 @@ import pickle
 import pandas as pd
 from utils.dbutils import database
 
-host_name = "localhost"
+host_name = "capstone.crvcosgpcpuk.us-east-1.rds.amazonaws.com"
 username = 'root'
-password = 'root' #dba password
+password = 'root1234' #dba password
 db = "capstone"
 auth_plugin = 'mysql_native_password'
 table="web_raw_data"

@@ -1,4 +1,4 @@
-# IIIT-Capstone
+# IIIT-capstone
 ### Initial setup
 Prerequisites:
 setup mysql server in local with hostname: localhost, username:root, password:root

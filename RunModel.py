@@ -4,9 +4,9 @@ from utils.utility import preprocess,preprocess_class
 from utils.dbutils import database
 import json
 
-host_name = "localhost"
+host_name = "capstone.crvcosgpcpuk.us-east-1.rds.amazonaws.com"
 username = 'root'
-password = 'root'  # dba password
+password = 'root1234'  # dba password
 db = "capstone"
 table = 'web_raw_data'
 auth_plugin = 'mysql_native_password'
