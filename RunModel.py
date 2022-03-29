@@ -1,35 +1,32 @@
 from utils import scraper
 import pickle
-from utils.utility import preprocess,preprocess_class
+from utils.utility import preprocess, preprocess_class
 from utils.dbutils import database
 import json
+from dbconfig import *
 
-host_name = "capstone.crvcosgpcpuk.us-east-1.rds.amazonaws.com"
-username = 'root'
-password = 'root1234'  # dba password
-db = "capstone"
-table = 'web_raw_data'
-auth_plugin = 'mysql_native_password'
-table="web_raw_data"
 
 def get_features(url):
-    seq_id=scraper.feature_extract(url,True)
+    seq_id = scraper.feature_extract(url, True)
     return seq_id
 
+
 def get_genre(features):
-    with open("models/category_model.pkl","rb") as file:
-        class_model=pickle.load(file)
+    with open("models/category_model.pkl", "rb") as file:
+        class_model = pickle.load(file)
     file.close()
-    category=class_model.predict(features)
+    category = class_model.predict(features)
     print(category)
     return category
 
+
 def get_cred_score(features):
-    with open("models/rf_credibility_model.pkl","rb") as file:
-        reg_model=pickle.load(file)
+    with open("models/rf_credibility_model.pkl", "rb") as file:
+        reg_model = pickle.load(file)
     file.close()
-    score=reg_model.predict(features)
+    score = reg_model.predict(features)
     return score[0]
+
 
 def predict(url):
     print(url)
@@ -55,7 +52,8 @@ def predict(url):
 
     return ls_category, ld_cred_score
 
+
 def GetRegModelPerformance():
     reg_performance = json.load(open("models/regression_performance.json", "r"))
-    class_performance=json.load(open("models/classification_performance.json","r"))
-    return reg_performance,class_performance
+    class_performance = json.load(open("models/classification_performance.json", "r"))
+    return reg_performance, class_performance
