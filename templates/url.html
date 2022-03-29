@@ -205,7 +205,8 @@ table, th, td {
     contentType: 'application/json; charset=utf-8',
     dataType: "json",
     data: "",
-    url: "http://127.0.0.1:5000/prediction?url=" + document.getElementById('urlCheck').value,
+    url: "{{url_for('get_prediction')}}"+"?url=" + document.getElementById('urlCheck').value,
+
     success: function(data){
         document.getElementById('divGenre').innerHTML = data.Genre;
         document.getElementById('divCredScore').innerHTML = data.Score;

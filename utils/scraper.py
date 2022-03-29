@@ -18,14 +18,7 @@ from urllib.parse import urljoin
 from urllib.parse import urlparse
 import pandas as pd
 from utils.dbutils import database
-
-host_name = "capstone.crvcosgpcpuk.us-east-1.rds.amazonaws.com"
-username = 'root'
-password = 'root1234'  # dba password
-db = "capstone"
-table = 'web_raw_data'
-auth_plugin = 'mysql_native_password'
-table="web_raw_data"
+from dbconfig import *
 
 def feature_extract(url,save_flag=True):
 
