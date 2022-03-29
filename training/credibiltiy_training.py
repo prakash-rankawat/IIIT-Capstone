@@ -10,14 +10,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 from utils.dbutils import database
-
-host_name = "capstone.crvcosgpcpuk.us-east-1.rds.amazonaws.com"
-username = 'root'
-password = 'root1234'  # dba password
-db = "capstone"
-auth_plugin = 'mysql_native_password'
-table = "web_raw_data"
-
+from dbconfig import *
 
 def regression_retrain():
     # removing the obvious column not going to used in the model
