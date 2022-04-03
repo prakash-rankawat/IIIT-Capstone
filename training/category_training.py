@@ -27,8 +27,8 @@ def classification_retrain():
 
     # filling all null category as 'unknown'
     print(df2.category.mode()[0])
-    df2["category"].fillna(df2.category.mode()[0], inplace=True)
-
+    #df2["category"].fillna(df2.category.mode()[0], inplace=True)
+    df2 = df2[~(df2.category.isnull())]
     # Dropping the missing values.
     df2 = df2.fillna(0)
 
